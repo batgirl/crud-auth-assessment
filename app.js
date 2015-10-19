@@ -4,6 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var cookieSession = require('cookie-session');
+require('dotenv').load();
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -21,6 +23,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieSession({
+  name: 'crud-auth-session',
+  keys: [
+    process.env.SESSION_KEY_1, 
+    process.env.SESSION_KEY_2, 
+    process.env.SESSION_KEY_3
+]}));
 
 app.use('/', routes);
 app.use('/users', users);
