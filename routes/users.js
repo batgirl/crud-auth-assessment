@@ -6,7 +6,12 @@ var bcrypt = require('bcrypt');
 
 router.get('/signup', function(req, res, next) {
   if (req.session.user) res.render('index', {user: req.session.user, error: true});
-  res.render('users/signup', {title: "Sign Up", errors: []});
+  res.render('users/signInOrUp', {
+    title: "Sign Up", 
+    postPath: "signup", 
+    link: false, 
+    errors: [], 
+    errEmail: "" });
 });
 
 router.post('/signup', function(req, res, next) {
@@ -15,15 +20,23 @@ router.post('/signup', function(req, res, next) {
   Users.findOne({email: req.body.email.toLowerCase()}, function(err, user) {
     if (user) errors.push("Email is already in use");
     if (!req.body.email) errors.push("Email cannot be blank");
+    else if (req.body.email.indexOf("@") === -1 || 
+            req.body.email.indexOf(".") === -1) errors.push("Must be a valid email");
     if (!req.body.password) errors.push("Password cannot be blank");
-    if (req.body.email.indexOf("@") === -1 || req.body.email.indexOf(".") === -1) errors.push("Must be a valid email");
-    if (errors.length) res.render('users/signup', {title: "Try Again", errors: errors});
+    if (errors.length) res.render('users/signInOrUp', {
+      title: "Try Again", 
+      postPath: "signup", 
+      link: false, 
+      errors: errors, 
+      errEmail: req.body.email });
     else {
       bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(req.body.password, salt, function(err, hash) {
-          Users.insert({email: req.body.email.toLowerCase(), password: hash}, function(err, user) {
-            req.session.user = user;
-            res.redirect('/');
+          req.body.password = hash;
+          Users.insert({email: req.body.email.toLowerCase(), password: req.body.password}, 
+            function(err, user) {
+              req.session.user = user;
+              res.redirect('/');
           })
         })
       })    
@@ -33,7 +46,12 @@ router.post('/signup', function(req, res, next) {
 
 router.get('/signin', function(req, res, next) {
   if (req.session.user) res.render('index', {user: req.session.user, error: true});
-  res.render('users/signin', {title: "Sign In", errors: []});
+  res.render('users/signInOrUp', {
+    title: "Sign In", 
+    postPath: "signin", 
+    link: true, 
+    errors: [],
+    errEmail: "" });
 });
 
 router.post('/signin', function(req, res, next) {
@@ -42,7 +60,12 @@ router.post('/signin', function(req, res, next) {
   Users.findOne({email: req.body.email.toLowerCase()}, function(err, user) {
     if (user === null) {
       errors.push("Invalid Email / Password");
-      res.render('users/signin', {title: "Oops!", errors: errors});
+      res.render('users/signInOrUp', {
+        title: "Try Again", 
+        postPath: "signin", 
+        link: true, 
+        errors: errors,
+        errEmail: req.body.email });
     }
     if (user) {
       bcrypt.compare(req.body.password, user.password, function(err, response) {
@@ -52,7 +75,12 @@ router.post('/signin', function(req, res, next) {
         }
         else {
           errors.push("Invalid Email / Password");
-          res.render('users/signin', {title: "Oops!", errors: errors});
+          res.render('users/signInOrUp', {
+            title: "Try Again", 
+            postPath: "signin", 
+            link: true, 
+            errors: errors,
+            errEmail: req.body.email });
         }
       }) 
     }
