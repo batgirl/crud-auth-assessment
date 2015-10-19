@@ -4,7 +4,7 @@ var db = require('monk')('localhost/test');
 var Students = db.get('students');
 
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Students' });
 });
 
 module.exports = router;

@@ -7,5 +7,20 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+    <% if (students) { %>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Phone Number</th>
+        </tr>
+        <% for (var i = 0; i < students.length; i++) { %>
+          <tr>
+            <td><%= students[i].name %></td>
+            <td><%= students[i].number %></td>
+          </tr>
+        <% } %>
+      </table>
+    <% } %>
+    <p><a href="new">Add a Student</a></p>
   </body>
 </html>
