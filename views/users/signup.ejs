@@ -13,10 +13,12 @@
       <% } %>
       </ul>
     <% } %>
-    <form action="/users/signin" method="POST">
+    <form action="/users/signup" method="POST">
       Email: <input type="text" name="email"><br><br>
       Password: <input type="text" name="password"><br><br>
       <input type="submit">
     </form>
+    <p>Already a member? <a href="/users/signin">Sign In</a></p>
+    <p><a href="/">Home Page</a></p>
   </body>
 </html>

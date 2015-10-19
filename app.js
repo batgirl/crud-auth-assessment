@@ -9,6 +9,7 @@ require('dotenv').load();
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var students = require('./routes/students');
 
 var app = express();
 
@@ -32,6 +33,7 @@ app.use(cookieSession({
 ]}));
 
 app.use('/', routes);
+app.use('/students', students);
 app.use('/users', users);
 
 // catch 404 and forward to error handler

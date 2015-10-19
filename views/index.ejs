@@ -1,26 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title>Home Page</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <% if (students) { %>
-      <table>
-        <tr>
-          <th>Name</th>
-          <th>Phone Number</th>
-        </tr>
-        <% for (var i = 0; i < students.length; i++) { %>
-          <tr>
-            <td><%= students[i].name %></td>
-            <td><%= students[i].number %></td>
-          </tr>
-        <% } %>
-      </table>
+    <h1>Home Page</h1>
+    <% if (user) { %>
+      <p>Hello <%= user.email %>!</p>
+      <p><a href="/students">Go to Students</a></p>
+      <p><a href="users/signout">Sign Out</a></p>
+    <% } else { %>
+      <p><a href="users/signup">Sign Up</a></p>
+      <p><a href="users/signin">Sign In</a></p>
     <% } %>
-    <p><a href="new">Add a Student</a></p>
   </body>
 </html>
