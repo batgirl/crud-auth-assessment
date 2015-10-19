@@ -5,10 +5,12 @@ var Users = db.get('users');
 var bcrypt = require('bcrypt');
 
 router.get('/signup', function(req, res, next) {
+  if (req.session.user) res.render('index', {user: req.session.user, error: true});
   res.render('users/signup', {title: "Sign Up", errors: []});
 });
 
 router.post('/signup', function(req, res, next) {
+  if (req.session.user) res.redirect('/');
   var errors = [];
   Users.findOne({email: req.body.email.toLowerCase()}, function(err, user) {
     if (user) errors.push("Email is already in use");
@@ -30,10 +32,12 @@ router.post('/signup', function(req, res, next) {
 });
 
 router.get('/signin', function(req, res, next) {
+  if (req.session.user) res.render('index', {user: req.session.user, error: true});
   res.render('users/signin', {title: "Sign In", errors: []});
 });
 
 router.post('/signin', function(req, res, next) {
+  if (req.session.user) res.redirect('/');
   var errors = [];
   Users.findOne({email: req.body.email.toLowerCase()}, function(err, user) {
     if (user === null) {

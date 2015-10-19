@@ -4,12 +4,28 @@ var db = require('monk')('localhost/test');
 var Students = db.get('students');
 
 router.get('/', function(req, res, next) {
+  if (!req.session.user) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+  }
   Students.find({}, function(err, students) {
     res.render('students/index', { title: 'Students', students: students});
   })
 });
 
 router.get('/new', function(req, res, next) {
+  if (!req.session.user) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+  }
   res.render('students/new', {title: 'New Student', errors: []});
 })
 
@@ -31,6 +47,14 @@ router.post('/new', function(req, res, next) {
 })
 
 router.get('/:id', function(req, res, next) {
+  if (!req.session.user) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+  }
   Students.findOne({_id: req.params.id}, function(err, student) {
     res.render('students/show', {student: student});
   })
